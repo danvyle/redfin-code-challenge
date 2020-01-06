@@ -4,7 +4,18 @@ var API = 'http://data.sfgov.org/resource/bbb8-hzi6.json';
 function foodTruckFinder(url) {
   request(url, function (error, response, body) {
     var returnedResults = []
+    function currentDay() {
+      const now = new Date();
+      var day = now.getDay();
+      return day
+      }
+    function currentTime(){
+      const now = new Date();
+      var time = now.getHours() + ":" + now.getMinutes();
+      return time
+    }
     //handle error
+    console.log(currentDay(), currentTime())
     if (response.statusCode == 200) {
       //successful call, can take body and put it into an array
       JSON.parse(body).forEach(function(key) {
@@ -18,15 +29,9 @@ function foodTruckFinder(url) {
       });
     })};
 
-    
-    console.table(returnedResults)
+    // console.table(returnedResults)
     //
-    // function currentDate() {
-    //     const now = new Date();
-    //     const currentTime = now.getHours() + ":" + now.getMinutes();
-    //     const currentDay = now.getDay();
-    //     console.log(currentTime, currentDay)
-    //   }
+
 
       // else {
       //   console.log('error:', error);
