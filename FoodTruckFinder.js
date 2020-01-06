@@ -1,26 +1,47 @@
 var request = require('request');
-var API = 'http://data.sfgov.org/resource/bbb8-hzi6.json'
-
+var API = 'http://data.sfgov.org/resource/bbb8-hzi6.json';
 
 function foodTruckFinder(url) {
   request(url, function (error, response, body) {
+    var returnedResults = []
     //handle error
     if (response.statusCode == 200) {
       //successful call, can take body and put it into an array
-      console.log('**THIS IS THE BODY***', body)
-    }
+      JSON.parse(body).forEach(function(key) {
+        returnedResults.push([key.applicant,key["location"],key["dayofweekstr"] + " , " + key["start24"] + " to " +key["end24"]]);
+        returnedResults.sort(function(a,b){
+        if(a[0] > b[0])
+          return 1;
+        if(a[0] < b[0])
+          return -1;
+        return 0;
+      });
+    })};
 
-  else {
-    console.log('error:', error);
-  }
-   //handle status code
-  console.log('statusCode:', response && response.statusCode);
-  });
-}
+    
+    console.table(returnedResults)
+    //
+    // function currentDate() {
+    //     const now = new Date();
+    //     const currentTime = now.getHours() + ":" + now.getMinutes();
+    //     const currentDay = now.getDay();
+    //     console.log(currentTime, currentDay)
+    //   }
+
+      // else {
+      //   console.log('error:', error);
+      // }
+       //handle status code
+      // console.log('statusCode:', response && response.statusCode);
+
+})};
 
 foodTruckFinder(API);
+// currentDate();
 
 
+
+//get timeout
 // Call the API
 // handle status errors
 // evaluate current time NOW
