@@ -25,6 +25,7 @@ tbd
 ##### Project Dependencies
 
 request@2.88.0
+readline
 
 ##### How to run
 
