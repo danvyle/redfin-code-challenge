@@ -2,36 +2,30 @@ var request = require('request');
 var API = 'http://data.sfgov.org/resource/bbb8-hzi6.json';
 
 function foodTruckFinder(url) {
+
+  const now = new Date();
+  var currentDay = now.getDay();
+  var currentTime = now.getHours() + ":" + now.getMinutes();
+
   request(url, function (error, response, body) {
     var returnedResults = []
-    function currentDay() {
-      const now = new Date();
-      var day = now.getDay();
-      return day
-      }
-    function currentTime(){
-      const now = new Date();
-      var time = now.getHours() + ":" + now.getMinutes();
-      return time
-    }
-    //handle error
-    console.log(currentDay(), currentTime())
-    if (response.statusCode == 200) {
-      //successful call, can take body and put it into an array
+    if(response.statusCode == 200) {
       JSON.parse(body).forEach(function(key) {
-        returnedResults.push([key.applicant,key["location"],key["dayofweekstr"] + " , " + key["start24"] + " to " +key["end24"]]);
+        if(currentDay ==  parseInt(key["dayorder"]) && currentTime >= key["start24"] && currentTime <= key["end24"]) {
+        returnedResults.push([key["applicant"],key["location"],key["dayofweekstr"] + " , " + key["start24"] + " to " +key["end24"]]);
+        }
         returnedResults.sort(function(a,b){
-        if(a[0] > b[0])
-          return 1;
-        if(a[0] < b[0])
-          return -1;
-        return 0;
-      });
-    })};
+            if(a[0] > b[0])
+              return 1;
+            if(a[0] < b[0])
+              return -1;
+              return 0;
+          });
+        });
+      };
+    console.table(returnedResults)
 
-    // console.table(returnedResults)
     //
-
 
       // else {
       //   console.log('error:', error);
@@ -39,7 +33,10 @@ function foodTruckFinder(url) {
        //handle status code
       // console.log('statusCode:', response && response.statusCode);
 
-})};
+    });
+  };
+
+
 
 foodTruckFinder(API);
 // currentDate();
